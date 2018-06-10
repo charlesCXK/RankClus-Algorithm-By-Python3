@@ -30,7 +30,7 @@
 
 计算公式如下图:
 
-<img src="pic/1.jpg" width=5></img>
+<img src="pic/1.jpg" />
 
 其中$\vec{r}_{X}(x)$和$\vec{r}_{Y}(y)$分别是会议和作者在这个分类情况下的排名.
 
