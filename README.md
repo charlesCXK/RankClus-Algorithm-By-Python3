@@ -71,3 +71,12 @@ ${aplha}​$ 是自定义的一个参数，代表${作者—作者}​$和${会�
 
 
 ##### Repeat Steps 1, 2 and 3
+
+
+
+### 三、输出文件
+
+##### 1、output/simple_rankclus_confer.csv, output/simple_rankclus_author.csv
+
+用 simpleranking 排名算法得到的每个类别排名前十的会议/作者
+
