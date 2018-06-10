@@ -1,6 +1,6 @@
 # 2018 PKU Data Warehouse
 
-#### 一、对XML文件的预处理：HandleXML.ipynb
+### 一、对XML文件的预处理：HandleXML.ipynb
 
 **包括**：
 
@@ -10,19 +10,23 @@
 
 
 
-#### 二、RankCLus算法：Rankclus.ipynb
+### 二、RankCLus算法：Rankclus.ipynb
 
-##### Step 0: Initialization.
+#### Step 0: Initialization.
 
 第一步，初始化。将会议随机分配到K个类别中。K 设定为15.
 
 
 
-##### Step 1: Ranking for each cluster
+***
+
+
+
+#### Step 1: Ranking for each cluster
 
 在每个类别中，计算作者与会议的条件排名。排名方法有**Simple Ranking**和**Authority Ranking**两种
 
-**Simple Ranking**
+##### **————Simple Ranking**————
 
 计算公式如下图:
 
@@ -32,7 +36,7 @@
 
 
 
-**Authority Ranking**
+##### **————Authority Ranking————**
 
 **Authority Ranking**的原理是基于这样一个直觉：**高排名的作者倾向于向高排名的会议投稿，高排名的会议更容易吸引高排名的人**。所以$\vec{r}_{X}(x)$和$\vec{r}_{Y}(y)$其实是相互影响的。下图是会议、作者排名的计算公式(包含归一化的步骤)：
 
@@ -46,11 +50,23 @@ ${aplha}​$ 是自定义的一个参数，代表${作者—作者}​$和${会�
 
 
 
+***
+
+
+
 ##### Step 2: Estimation of the mixture model component co-efficients
 
 
 
+***
+
+
+
 ##### Step 3: Cluster adjustment
+
+
+
+***
 
 
 
