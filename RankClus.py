@@ -419,7 +419,9 @@ if __name__ == '__main__':
 	    # heapq堆算法，取最大的10个依次输出
 	    print("Conference information ...")
 	    for confer in heapq.nlargest(10, inrank_confer[k].items(), lambda x: x[1]):
-	        print(str(confer[0]) + '\t')
+	        print(str(confer[0]), end='\t')
+        print('\n' * 3)
 	    print("Author information ...")
-	    for author in heapq.nlargest(10, inrank_confer[k].items(), lambda x: x[1]):
-	        print(str(author[0]) + '\t')
+	    for author in heapq.nlargest(10, rank_author[k].items(), lambda x: x[1]):
+	        print(str(author[0]), end='\t')
+        print('\n' * 3)
