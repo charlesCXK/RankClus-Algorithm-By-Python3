@@ -2,47 +2,45 @@
 
 ### 一、文件与编译使用说明
 
-#### I、数据文件
+#### 1.1、数据文件
 
-——**data**文件夹
+- **data**文件夹
 
 包含了需要的xml数据以及提取后的文件（**dblp.xml** 在github中没有上传，请自行下载<a href = "http://dblp.org/xml/release/">dblp-2018-05-01</a>）
 
-——**output**文件夹
+- **output**文件夹
 
 存放了对作者、会议排名的（每个类别前十位）结果（CSV格式）
 
-——**pic**文件夹
+- **pic**文件夹
 
 存放了README文件需要的图片
 
 
 
-#### II、代码文件
+#### 1.2、代码文件
 
-——**HandleXML.ipynb**
+- **HandleXML.ipynb**
 
 预处理xml文件，从中提取出信息
 
-——**simple.ipynb** && **authority.ipynb**
+- **simple.ipynb** && **authority.ipynb**
 
 分别用 SimpleRanking 和 AuthorityRanking 排序方法实现的RankClus算法。
 
-——**multi_simple.ipynb** && **multi_authority.ipynb**
+- **multi_simple.ipynb** && **multi_authority.ipynb**
 
 以上代码的多进程版本
 
 
 
-#### III、运行环境 && 运行方法
+#### 1.3、运行环境 && 运行方法
 
-1、编写时运行环境：**macOS Sierra 10.12**
+- 编写时运行环境：**macOS Sierra 10.12**
+- 编程语言 && 工具：**python3** && **jupyter notebook**
+- 运行步骤
 
-2、编程语言 && 工具：**python3** && **jupyter notebook**
-
-3、运行步骤
-
-3.1 第一种方法：用jupyter运行
+**第一种方法**：用jupyter运行
 
 （1）用命令行打开 jupyter notebook
 
@@ -52,7 +50,7 @@ $ ipython notebook
 
 （2）选择需要运行的ipynb文件。点击上方菜单栏 => Cell => Run All。
 
-3.2 第二种方法：运行 .py 文件
+**第二种方法**：运行 .py 文件
 
 ~~~perl
 $ python3 RankClus.py
@@ -62,35 +60,20 @@ $ python3 RankClus.py
 
 
 
+### 二、程序流程
 
-
-
-
-
-
-
-
-### 二、对XML文件的预处理：HandleXML.ipynb
+#### 1、对XML文件的预处理：HandleXML.ipynb
 
 **包括**：
 
-——（1）将其中的类似'&ouml ;'的字符串删掉，这是unicode遗留问题
-
-——（2）提取出1998-2007年间的（会议、作者）信息，写入到新文件 data/data.txt。每行的格式为：会议$作者1;作者2;.....作者n;
-
+- （1）将其中的类似'&ouml ;'的字符串删掉，这是unicode遗留问题
+- （2）提取出1998-2007年间的（council、author）信息，写入到新文件 data/data.txt。每行的格式为：会议$作者1;作者2;.....作者n;
 
 
 
 
 
-
-
-
-
-
-
-
-### 三、RankCLus算法
+#### 2、RankCLus算法
 
 #### Step 0: Initialization.
 
@@ -176,15 +159,42 @@ Step2计算了Θ矩阵，包含了每个会议分别属于K个类别的概率。
 
 
 
+### 三、运行结果
+
+#### 4.1 使用AuthorityRanking排序算法输出的council信息（K=15）
+
+| 1                | 2         | 3           | 4              | 5           | 6         | 7                                | 8                                        | 9                                        | 10                           | 11         | 12                     | 13                | 14       | 15                                       |
+| ---------------- | --------- | ----------- | -------------- | ----------- | --------- | -------------------------------- | ---------------------------------------- | ---------------------------------------- | ---------------------------- | ---------- | ---------------------- | ----------------- | -------- | ---------------------------------------- |
+| HICSS            | NIPS      | DATE        | ICASSP         | INTERSPEECH | ICRA      | SODA                             | PVM/MPI                                  | KES                                      | Winter Simulation Conference | GLOBECOM   | CHI Extended Abstracts | VLDB              | IPDPS    | IGARSS                                   |
+| AMCIS            | ICML      | DAC         | ICME           | ICASSP (1)  | IROS      | SAC                              | SC                                       | CCCG                                     | ICSE                         | ICC        | CHI                    | ICDE              | Euro-Par | SMC                                      |
+| ECIS             | ICCV      | ICCAD       | EUSIPCO        | ICSLP       | ROBIO     | Computers and Their Applications | CCGRID                                   | KES (2)                                  | DG.O                         | WCNC       | UIST                   | SIGMOD Conference | ICPP     | International Conference on Computational Science (3) |
+| ICIS             | IJCAI     | ASP-DAC     | ICIP           | EUROSPEECH  | ISER      | ICDCS Workshops                  | HPDC                                     | KES (3)                                  | JISBD                        | PIMRC      | INTERACT               | CIKM              | GECCO    | ISNN (2)                                 |
+| PACIS            | UAI       | VLSI Design | ICIP (3)       | SSW         | Humanoids | AINA                             | CLUSTER                                  | KES (1)                                  | RE                           | INFOCOM    | JCDL                   | SIGIR             | PDPTA    | CCTA                                     |
+| HICSS (1)        | AAAI      | ITC         | ICIP (2)       | TSD         | RoboCup   | LCN                              | ICDCS                                    | IEA/AIE                                  | COMPSAC                      | VTC Spring | CSCW                   | EDBT              | PDP      | SMC (2)                                  |
+| Bled eConference | KDD       | ISLPED      | ICIP (1)       | ISCSLP      | ISRR      | CAINE                            | DSN                                      | IDEAL                                    | ICWS                         | VTC Fall   | IUI                    | PODS              | HiPC     | CIS                                      |
+| HICSS (6)        | CVPR (1)  | ICCD        | ICASSP (3)     | ASRU        | CIRA      | CAV                              | GRID                                     | ICTAI                                    | ECBS                         | AMIA       | UbiComp                | DASFAA            | LCPC     | SMC (4)                                  |
+| EGOV             | AAAI/IAAI | ISQED       | ACM Multimedia | IWSLT       | RO-MAN    | SEKE                             | International Conference on Computational Science | Australian Conference on Artificial Intelligence | WICSA                        | ICCCN      | AVI                    | TREC              | ICS      | ICIC (2)                                 |
+| IRMA Conference  | CVPR (2)  | VTS         | ICASSP (2)     | AVSP        | FSR       | AINA (1)                         | PPAM                                     | CIT                                      | OOPSLA Companion             | BROADNETS  | Graphics Interface     | DEXA              | HPCA     | SMC (1)                                  |
 
 
 
+#### 4.2 不同排序算法之间的比较
 
+| 排序算法    | SimpleRanking | AuthorityRanking |
+| ------- | ------------- | ---------------- |
+| 单进程 (s) | 1216.839232   | 2074.304641      |
+| 多进程 (s) | 1248.64912    | 1458.097307      |
 
+| 排序算法       | SimpleRanking | AuthorityRanking |
+| ---------- | ------------- | ---------------- |
+| Rank (s)   | 78.58685756   | 945.9625461      |
+| EM (s)     | 1119.957891   | 1111.07937       |
+| Adjust (s) | 18.2673676    | 17.23624682      |
 
+<img src="pic/9.png" width="400"/>
 
+<img src="pic/10.png" width="400"/>
 
-### 四、运行结果
+<img src="pic/11.png" width="400"/>
 
-##### 
-
+<img src="pic/12.png" width="400"/>
