@@ -3,6 +3,7 @@
 import random
 import heapq
 import time
+import argparse
 import multiprocessing
 import numpy as np
 
@@ -362,95 +363,119 @@ def poolrank(rank_confer, rank_author, k):
     else:
         tmp, rank_author[k], rank_confer[k] = RankAlgorithm(CAnet, ACnet, AAnet, Cluster[k], alpha)
 
+'''
+处理命令行参数
+'''
+def parse_arg():
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('-k', dest='clusternum', type=int, default=15, 
+        help='Number of total clusters, default=15')
+    parser.add_argument('-i', dest='iternum', type=int, default=30, 
+        help='Number of iterations of RankClus, default=30')
+    parser.add_argument('-e', dest='emnum', type=int, default=5, 
+        help='Number of iterations of EM algorithm, default=5')
+    parser.add_argument('-a', dest='Alpha', type=float, default=0.95, 
+        help='Parameter alpha, used in rank function, default=0.95')
+    parser.add_argument('-r', dest='Rank', type=int, default=1, 
+        help='Choose a rank function, 0:SimpleRanking and 1:AuthorityRanking, default=1')
+
+    return parser.parse_args()
+
 
 if __name__ == '__main__':
-	K = 15    # 类别数目
-	alpha = 0.95
-	delta = 0.000001    # 判断是否收敛
-	iter_num = 30    # 迭代次数
-	now_iter = 0
-	RankAlgorithm = AuthorityRanking    # AuthorityRanking
+    # 解析命令行参数
+    args = parse_arg()
+    K = args.clusternum
+    alpha = args.Alpha
+    iter_num = args.iternum    # 迭代次数
+    now_iter = 0
+    rankfunc = args.Rank
+    if rankfunc == 1:
+        RankAlgorithm = AuthorityRanking    # AuthorityRanking
+    else:
+        RankAlgorithm = SimpleRanking
 
-	# 多进程
-	manager = multiprocessing.Manager()
-	        
-	'''获取几种网络'''
-	print("Build the net of authors and conferences ...")
-	CAnet, ACnet, AAnet = BuildNet('data/data.txt')
+    # 多进程
+    manager = multiprocessing.Manager()
+            
+    '''获取几种网络'''
+    print("Build the net of authors and conferences ...")
+    CAnet, ACnet, AAnet = BuildNet('data/data.txt')
 
-	'''
-	开始计时
-	'''
-	main_start = time.time()
+    '''
+    开始计时
+    '''
+    main_start = time.time()
 
-	'''初始化类别'''
-	print("Init the cluster ...")
-	Cluster = init_cluster(CAnet, K)
+    '''初始化类别'''
+    print("Init the cluster ...")
+    Cluster = init_cluster(CAnet, K)
 
-	rank_confer= manager.list([{} for k in range(K)])    # 加上 manager.list，可以在子进程修改全局变量
-	rank_author= manager.list([{} for k in range(K)])
+    rank_confer= manager.list([{} for k in range(K)])    # 加上 manager.list，可以在子进程修改全局变量
+    rank_author= manager.list([{} for k in range(K)])
 
-	'''
-	开始迭代算法
-	'''
-	while now_iter < iter_num:
-	    # 检查是否有类为空
-	    if not check_cluster(Cluster):
-	        print("Some cluster has been reduced to ZERO, exit ...")
-	        now_iter = 0
-	        Cluster = init_cluster(CAnet, K)
-	    else:
-	        now_iter += 1
-	    # 创建进程池
-	    pool = multiprocessing.Pool(processes=K)
+    '''
+    开始迭代算法
+    '''
+    while now_iter < iter_num:
+        # 检查是否有类为空
+        if not check_cluster(Cluster):
+            print("Some cluster has been reduced to ZERO, exit ...")
+            now_iter = 0
+            Cluster = init_cluster(CAnet, K)
+        else:
+            now_iter += 1
+        # 创建进程池
+        pool = multiprocessing.Pool(processes=K)
 
-	    print("********************第{}次迭代：********************".format(now_iter))
-	    print("start ranking ...")
-	        
-	    process = []    # 进程列表
-	    for k in range(K):
-	        # 用分好的类别计算相对排名
-	        pool.apply_async(poolrank, (rank_confer, rank_author, k))
+        print("********************第{}次迭代：********************".format(now_iter))
+        print("start ranking ...")
+            
+        process = []    # 进程列表
+        for k in range(K):
+            # 用分好的类别计算相对排名
+            pool.apply_async(poolrank, (rank_confer, rank_author, k))
 
-	    pool.close()
-	    pool.join()
-	    
-	    # 将数据恢复成正常(单进程)模式
-	    rank_confer = list(rank_confer)
-	    rank_author = list(rank_author)
-	        
-	    print("start EM algorithm ...")
-	    pai,pz = EM(CAnet, rank_confer, rank_author, Cluster, K, iternum=5)
-	    print("adjust the cluster ...")
-	    Cluster = adjust_class(CAnet, Cluster, pai, K)
+        pool.close()
+        pool.join()
 
-	'''
-	结束计时
-	'''
-	main_end = time.time()
-	print("**********************************************************************")
-	print("Time of RankCLus Algorithm using AuthorityRanking is {} s".format(main_end-main_start))
-	print("**********************************************************************")
+        # 将数据恢复成正常(单进程)模式
+        rank_confer = list(rank_confer)
+        rank_author = list(rank_author)
+            
+        print("start EM algorithm ...")
+        pai,pz = EM(CAnet, rank_confer, rank_author, Cluster, K, iternum=5)
+        print("adjust the cluster ...")
+        Cluster = adjust_class(CAnet, Cluster, pai, K)
 
-	'''
-	根据最后的分类再计算一次排名，得出排名最靠前的10个
-	'''
-	inrank_confer = [{} for k in range(K)]
-	for k in range(K):
-	    print("********************************************")
-	    print("start ranking of cluster {}".format(k))
-	    # 用分好的类别计算相对排名
-	    if RankAlgorithm == SimpleRanking:
-	        inrank_confer[k], rank_author[k], rank_confer[k] = RankAlgorithm(CAnet, ACnet, Cluster[k])
-	    else:
-	        inrank_confer[k], rank_author[k], rank_confer[k] = RankAlgorithm(CAnet, ACnet, AAnet, Cluster[k], alpha)
-	 
-	    # heapq堆算法，取最大的10个依次输出
-	    print("Conference information ...")
-	    for confer in heapq.nlargest(10, inrank_confer[k].items(), lambda x: x[1]):
-	        print(str(confer[0]), end='\t')
+    '''
+    结束计时
+    '''
+    main_end = time.time()
+    print("**********************************************************************")
+    print("Time of RankCLus Algorithm using AuthorityRanking is {} s".format(main_end-main_start))
+    print("**********************************************************************")
+
+    '''
+    根据最后的分类再计算一次排名，得出排名最靠前的10个
+    '''
+    inrank_confer = [{} for k in range(K)]
+    for k in range(K):
+        print("********************************************")
+        print("start ranking of cluster {}".format(k))
+        # 用分好的类别计算相对排名
+        if RankAlgorithm == SimpleRanking:
+            inrank_confer[k], rank_author[k], rank_confer[k] = RankAlgorithm(CAnet, ACnet, Cluster[k])
+        else:
+            inrank_confer[k], rank_author[k], rank_confer[k] = RankAlgorithm(CAnet, ACnet, AAnet, Cluster[k], alpha)
+
+        # heapq堆算法，取最大的10个依次输出
+        print("Conference information ...")
+        for confer in heapq.nlargest(10, inrank_confer[k].items(), lambda x: x[1]):
+            print(str(confer[0]), end='\t')
         print('\n' * 3)
-	    print("Author information ...")
-	    for author in heapq.nlargest(10, rank_author[k].items(), lambda x: x[1]):
-	        print(str(author[0]), end='\t')
+        print("Author information ...")
+        for author in heapq.nlargest(10, rank_author[k].items(), lambda x: x[1]):
+            print(str(author[0]), end='\t')
         print('\n' * 3)

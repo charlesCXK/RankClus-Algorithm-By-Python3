@@ -27,8 +27,8 @@
 
 #### 3、运行环境 && 运行方法
 
-- 编写时运行环境：$macOS Sierra 10.12$
-- 编程语言 && 工具：$python3$ && $jupyter$ $notebook$
+- 编写时运行环境：$macOS\ Sierra\ 10.12,\ \ \ 2.6\ GHz\ Intel\ Core\ i7,\ \ \ 16GB\ DDR3,\ \ \ 4\ cores$
+- 编程语言 && 工具：$python3$ && $jupyter\ notebook$
 - 运行步骤
 
 **第一种方法**：用**jupyter notebook**运行
@@ -46,6 +46,22 @@ $ ipython notebook
 ```perl
 $ python3 RankClus.py
 ```
+
+**命令行参数**
+
+~~~Python
+usage: RankClus.py [-h] [-k CLUSTERNUM] [-i ITERNUM] [-e EMNUM] [-a ALPHA]
+                   [-r RANK]
+
+optional arguments:
+  -h, --help     show this help message and exit		# 显示帮助
+  -k CLUSTERNUM  Number of total clusters, default=15		# RankClus算法的总类别数目
+  -i ITERNUM     Number of iterations of RankClus, default=30		# RankClus算法迭代次数
+  -e EMNUM       Number of iterations of EM algorithm, default=5	# 混合模型中EM算法迭代次数
+  -a ALPHA       Parameter alpha, used in rank function, default=0.95	# 参数 alpha
+  -r RANK        Choose a rank function, 0:SimpleRanking and		
+                 1:AuthorityRanking, default=1				# 选择排序算法，1代表权威排序，0代表简单排序
+~~~
 
 <br>
 
