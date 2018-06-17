@@ -12,6 +12,10 @@ from collections import defaultdict
 
 '''
 读入data文件，构建网络(作者-会议、会议-作者、作者-作者)
+parameters:
+    ---- C_A：会议-作者网络
+    ---- A_C：作者-会议网络
+    ---- A_A：作者=作者网络
 '''
 def BuildNet(filename):
     con_dict = defaultdict(int)
@@ -72,6 +76,9 @@ Step 0: Initialization
 
 '''
 将会议初始化成K个类
+parameters
+    ---- CAnet：会议-作者网络
+    ---- K：需要划分的类=类别数
 '''
 def init_cluster(CAnet, K):
     cluster = [[] for i in range(K)]    # 每个类一个列表
@@ -87,6 +94,10 @@ Step 1: Ranking for each cluster
 
 '''
 实现 Simple Ranking
+parameters
+    ---- confer_author：会议-作者网络
+    ---- author_confer：作者-会议网络
+    ---- cluster：当前类别(包含了若干会议)
 '''
 def SimpleRanking(confer_author, author_confer, cluster):
     #print("Ranking...")
@@ -124,6 +135,12 @@ def SimpleRanking(confer_author, author_confer, cluster):
 
 '''
 实现 Authority Ranking
+parameters
+    ---- confer_author：会议-作者网络
+    ---- author_confer：作者-会议网络
+    ---- author_author：作者-作者网络
+    ---- cluster：当前类别
+    ---- alpha：人为定义的参数，在计算 author_rank 时衡量各部分权重
 '''
 def AuthorityRanking(confer_author, author_confer, author_author, cluster, alpha):
     #print("Ranking...")
@@ -197,6 +214,13 @@ Step 2: Get new attributes for objects and cluster
 
 '''
 用EM算法估计参数
+parameters
+    ---- confer_author：会议-作者网络
+    ---- rank_confer：会议的排名
+    ---- rank_author：作者的排名
+    ---- cluster：所有的类别
+    ---- K：类别数
+    ---- iternum：EM算法迭代次数
 '''
 def EM(confer_author, rank_confer, rank_author, cluster, K, iternum=5):
     pai = {}    # 每个会议有 K 维向量，代表属于第 i 个类别的概率
@@ -279,6 +303,11 @@ def myconsine(x, y):
 
 '''
 重新划分类别
+parameters
+    ---- confer_author：会议-作者网络
+    ---- cluster：所有类别
+    ---- feature：字典，保存所有会议的特征向量
+    ---- K：类别数
 '''
 def adjust_class(confer_author, cluster, feature, K):
     '''
