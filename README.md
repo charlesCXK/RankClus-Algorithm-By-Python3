@@ -16,7 +16,7 @@
 
 存放了README文件需要的图片
 
-
+<br>
 
 #### 1.2、代码文件
 
@@ -32,7 +32,7 @@
 
 以上代码的多进程版本
 
-
+<br>
 
 #### 1.3、运行环境 && 运行方法
 
@@ -56,9 +56,9 @@ $ ipython notebook
 $ python3 RankClus.py
 ~~~
 
+<br>
 
-
-
+<br>
 
 ### 二、程序流程
 
@@ -70,7 +70,7 @@ $ python3 RankClus.py
 - （2）提取出1998-2007年间的（council、author）信息，写入到新文件 data/data.txt。每行的格式为：会议$作者1;作者2;.....作者n;
 
 
-
+<br>
 
 
 #### 2、RankCLus算法
@@ -79,11 +79,7 @@ $ python3 RankClus.py
 
 第一步，初始化。将会议随机分配到K个类别中。K 设定为15.
 
-
-
 ***
-
-
 
 #### Step 1: Ranking for each cluster
 
@@ -97,8 +93,6 @@ $ python3 RankClus.py
 
 其中$$\vec{r}_{X}(x)$$和$$\vec{r}_{Y}(y)$$分别是会议和作者在这个分类情况下的排名.
 
-
-
 ##### **————Authority Ranking————**
 
 **Authority Ranking**的原理是基于这样一个直觉：**高排名的作者倾向于向高排名的会议投稿，高排名的会议更容易吸引高排名的人**。所以$$\vec{r}_{X}(x)$$和$$\vec{r}_{Y}(y)$$其实是相互影响的。下图是会议、作者排名的计算公式(包含归一化的步骤)：
@@ -111,13 +105,9 @@ $ python3 RankClus.py
 
 
 
-${aplha}​$ 是自定义的一个参数，代表${作者—作者}​$和${会议-作者}​$之间影响权重。
-
-
+${aplha}$ 是自定义的一个参数，代表${作者—作者}$和${会议-作者}$之间影响权重。
 
 ***
-
-
 
 #### Step 2: Estimation of the mixture model component co-efficients
 
@@ -139,25 +129,19 @@ $p_{k}(x_{i})$是给定类别K，会议$x_{i}$的排名。$p(x = k)$由如下公
 
 ***
 
-
-
 #### Step 3: Cluster adjustment
 
 Step2计算了Θ矩阵，包含了每个会议分别属于K个类别的概率。将这个K维向量作为这个会议的特征值$\vec{S}_{x_{i}} = (\pi_{i, 1}, \pi_{i, 2}...\pi_{i, K} )$。这样每个类别可以算出一个聚类中心。接下来我们计算每个会议到K个类聚类中心的距离（用余弦相似度计算），找出距离最近的类，对会议 i 重新分配类别。
 
-
-
 ***
-
-
 
 #### Step 4: Repeat Steps 1, 2 and 3
 
 迭代运行上述步骤。（代码中迭代次数设置为 30）
 
+<br>
 
-
-
+<br>
 
 ### 三、运行结果
 
@@ -176,7 +160,7 @@ Step2计算了Θ矩阵，包含了每个会议分别属于K个类别的概率。
 | EGOV             | AAAI/IAAI | ISQED       | ACM Multimedia | IWSLT       | RO-MAN    | SEKE                             | International Conference on Computational Science | Australian Conference on Artificial Intelligence | WICSA                        | ICCCN      | AVI                    | TREC              | ICS      | ICIC (2)                                 |
 | IRMA Conference  | CVPR (2)  | VTS         | ICASSP (2)     | AVSP        | FSR       | AINA (1)                         | PPAM                                     | CIT                                      | OOPSLA Companion             | BROADNETS  | Graphics Interface     | DEXA              | HPCA     | SMC (1)                                  |
 
-
+<br>
 
 #### 4.2 不同排序算法之间的比较
 
