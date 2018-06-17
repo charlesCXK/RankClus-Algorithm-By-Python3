@@ -163,7 +163,7 @@ Step2计算了Θ矩阵，包含了每个会议分别属于K个类别的概率。
 
 #### 4.2 不同排序算法之间的比较
 
-<div align="center">
+
 
 | 排序算法    | SimpleRanking | AuthorityRanking |
 | ------- | ------------- | ---------------- |
@@ -176,15 +176,13 @@ Step2计算了Θ矩阵，包含了每个会议分别属于K个类别的概率。
 | EM (s)     | 1119.957891   | 1111.07937       |
 | Adjust (s) | 18.2673676    | 17.23624682      |
 
-</div>
+<br><img src="pic/9.png" width="400"/>
 
-<div align="center"><img src="pic/9.png" width="400"/></div>
+<br><img src="pic/10.png" width="400"/>
 
-<div align="center"><img src="pic/10.png" width="400"/></div>
+<br><img src="pic/11.png" width="400"/>
 
-<br><div align="center"><img src="pic/11.png" width="400"/></div>
-
-<br><div align="center"><img src="pic/12.png" width="400"/></div>
+<br><img src="pic/12.png" width="400"/>
 
 <br>
 
